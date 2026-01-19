@@ -1,0 +1,576 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>김엄마 관리형 독서실 멘토단 소개</title>
+    <style>
+        body {
+            font-family: 'Pretendard', Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background: linear-gradient(to bottom, #f5f7fa, #dfe7ee);
+            color: #333;
+            overflow-x: hidden;
+        }
+        h1 {
+            text-align: center;
+            margin: 20px 0;
+            font-size: 2.8em;
+            color: #0056b3;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.1);
+        }
+        .slide-container {
+            max-width: 1200px;
+            margin: 20px auto;
+            position: relative;
+            overflow: hidden;
+            border-radius: 20px;
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.2);
+        }
+        .slides-wrapper {
+            display: flex;
+            transition: transform 0.5s ease-in-out;
+            width: 300%; /* 3개 슬라이드 */
+        }
+        .slide {
+            width: 33.333%;
+            background: #ffffff;
+            padding: 30px;
+            box-sizing: border-box;
+        }
+        .mentor-row {
+            display: flex;
+            flex-wrap: wrap;
+            align-items: center;
+            padding: 25px;
+            border-bottom: 1px solid #ddd;
+            transition: background-color 0.3s ease, transform 0.2s ease;
+            margin-bottom: 15px;
+            border-radius: 15px;
+        }
+        .mentor-row:hover {
+            background: #e3f2fd;
+            transform: scale(1.02);
+        }
+        .mentor-row:last-child {
+            border-bottom: none;
+        }
+        .mentor-image {
+            flex: 1;
+            max-width: 160px;
+            height: 160px;
+            margin-right: 30px;
+            background-color: #f0f0f0;
+            border-radius: 50%;
+            overflow: hidden;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+        }
+        .mentor-image img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+        .mentor-info {
+            flex: 3;
+            min-width: 250px;
+        }
+        .mentor-info h2 {
+            margin: 0;
+            font-size: 1.8em;
+            color: #003366;
+        }
+        .mentor-info p {
+            margin: 8px 0;
+            font-size: 1em;
+            color: #555;
+            line-height: 1.6;
+        }
+        .mentor-info strong {
+            display: block;
+            margin-top: 10px;
+            font-size: 1.2em;
+            color: #0066cc;
+        }
+
+        /* 슬라이드 네비게이션 */
+        .slide-nav {
+            text-align: center;
+            margin: 30px 0;
+        }
+        .nav-btn {
+            background: #0066cc;
+            color: white;
+            border: none;
+            padding: 12px 25px;
+            margin: 0 10px;
+            border-radius: 25px;
+            cursor: pointer;
+            font-size: 1em;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 15px rgba(0, 102, 204, 0.3);
+        }
+        .nav-btn:hover {
+            background: #004499;
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(0, 102, 204, 0.4);
+        }
+        .nav-btn.active {
+            background: #0056b3;
+            transform: scale(1.1);
+        }
+
+        /* 슬라이드 인디케이터 */
+        .slide-indicators {
+            text-align: center;
+            margin: 20px 0;
+        }
+        .indicator {
+            display: inline-block;
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            background: #ccc;
+            margin: 0 8px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+        .indicator.active {
+            background: #0066cc;
+            transform: scale(1.3);
+        }
+        .indicator.active::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.4), transparent);
+            animation: progress 8s linear infinite;
+        }
+
+        /* 자동 슬라이드 컨트롤 */
+        .auto-slide-control {
+            text-align: center;
+            margin: 15px 0;
+        }
+        .control-btn {
+            background: #28a745;
+            color: white;
+            border: none;
+            padding: 8px 16px;
+            margin: 0 5px;
+            border-radius: 20px;
+            cursor: pointer;
+            font-size: 0.9em;
+            transition: all 0.3s ease;
+        }
+        .control-btn:hover {
+            background: #218838;
+            transform: translateY(-1px);
+        }
+        .control-btn.pause {
+            background: #ffc107;
+        }
+        .control-btn.pause:hover {
+            background: #e0a800;
+        }
+
+        @keyframes progress {
+            0% { left: -100%; }
+            100% { left: 100%; }
+        }
+
+        /* 슬라이드 제목 */
+        .slide-title {
+            text-align: center;
+            font-size: 1.5em;
+            color: #0056b3;
+            margin-bottom: 20px;
+            font-weight: bold;
+        }
+
+        @media (max-width: 768px) {
+            .mentor-row {
+                flex-direction: column;
+                align-items: center;
+                text-align: center;
+            }
+            .mentor-image {
+                margin-bottom: 20px;
+                margin-right: 0;
+                max-width: 120px;
+                height: 120px;
+            }
+            .mentor-info {
+                flex: unset;
+                min-width: unset;
+            }
+            .mentor-info h2 {
+                font-size: 1.6em;
+            }
+            .mentor-info p {
+                font-size: 0.9em;
+            }
+            .mentor-info strong {
+                font-size: 1em;
+            }
+            .nav-btn {
+                padding: 10px 20px;
+                font-size: 0.9em;
+                margin: 5px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <h1>김엄마 관리형 독서실 멘토단 소개</h1>
+
+    <div class="slide-nav">
+        <button class="nav-btn active" onclick="goToSlide(0)">1그룹 (서울대)</button>
+        <button class="nav-btn" onclick="goToSlide(1)">2그룹 (연세대)</button>
+        <button class="nav-btn" onclick="goToSlide(2)">3그룹 (기타대학)</button>
+    </div>
+
+    <div class="slide-indicators">
+        <span class="indicator active" onclick="goToSlide(0)"></span>
+        <span class="indicator" onclick="goToSlide(1)"></span>
+        <span class="indicator" onclick="goToSlide(2)"></span>
+    </div>
+
+    <div class="auto-slide-control">
+        <button class="control-btn" id="autoSlideBtn" onclick="toggleAutoSlide()">⏸️ 자동재생 일시정지</button>
+        <button class="control-btn" onclick="resetAutoSlide()">🔄 다시시작</button>
+    </div>
+
+    <div class="slide-container">
+        <div class="slides-wrapper" id="slidesWrapper">
+            <!-- 슬라이드 1: 서울대 멘토들 -->
+            <div class="slide">
+                <div class="slide-title">🎓 서울대학교 멘토단</div>
+
+                <!-- 배서영 -->
+                <div class="mentor-row">
+                    <div class="mentor-image">
+                        <img src="images/a.png" alt="배서영">
+                    </div>
+                    <div class="mentor-info">
+                        <h2>배서영</h2>
+                        <p>야탑고등학교 졸업<br>서울대학교 수의예과 재학</p>
+                        <p>개인 맞춤 스케줄 작성<br>학생의 문제점/단점 파악 후 해결방법 제시<br>과목별 공부 방법 추천, 고민 상담</p>
+                        <strong>가능 요일: 일요일 10시~17시</strong>
+                    </div>
+                </div>
+
+                <!-- 김이연 -->
+                <div class="mentor-row">
+                    <div class="mentor-image">
+                        <img src="images/b.png" alt="김이연">
+                    </div>
+                    <div class="mentor-info">
+                        <h2>김이연</h2>
+                        <p>송도고등학교 졸업<br>서울대학교 첨단융합학부 재학</p>
+                        <p>다수의 멘토링 경험과 체계적인 김엄마 독서실 컨텐츠를 바탕으로 학생들마다 개별화된 지도 가능</p>
+                        <strong>가능 요일: 토요일, 일요일 13~18시</strong>
+                    </div>
+                </div>
+
+                <!-- 최윤혁 -->
+                <div class="mentor-row">
+                    <div class="mentor-image">
+                        <img src="images/c.png" alt="최윤혁">
+                    </div>
+                    <div class="mentor-info">
+                        <h2>최윤혁</h2>
+                        <p>인천포스코고등학교 졸업<br>서울대학교 에너지자원공학과 재학</p>
+                        <p>고등학교 3년 동안 성실히 활동, 학습하여 성적 상승 곡선 경험했던 것을 바탕으로 내신 대비, 학교 활동 및 학습 전반 관리에 능숙합니다.</p>
+                        <strong>가능 요일: 일요일 (시간 추후 공지)</strong>
+                    </div>
+                </div>
+
+                <!-- 한정빈 -->
+                <div class="mentor-row">
+                    <div class="mentor-image">
+                        <img src="images/h.png" alt="한정빈">
+                    </div>
+                    <div class="mentor-info">
+                        <h2>한정빈</h2>
+                        <p>미추홀외국어고등학교 졸업<br>서울대학교 국어국문학과 재학</p>
+                        <p>국어국문학과에 재학 중인 학생으로서, 문과 학생들에 특화한 멘토링을 진행하고자 합니다. 외국어고등학교를 졸업하고, 학생부종합전형으로 서울대, 연세대, 고려대 세 곳에 모두 합격했습니다.</p>
+                        <strong>가능 요일: 토요일 13시~18시</strong>
+                    </div>
+                </div>
+
+                <!-- 임건우 -->
+                <div class="mentor-row">
+                    <div class="mentor-image">
+                        <img src="images/i.png" alt="임건우">
+                    </div>
+                    <div class="mentor-info">
+                        <h2>임건우</h2>
+                        <p>인천포스코고등학교 졸업<br>서울대학교 바이오시스템소재학부 재학</p>
+                        <p>정시로 현역으로 서울대를 입학하고 재수하여 의예과 진학 예정입니다. 수시와 정시를 병행한 경험으로 갈등하는 학생들에게 조언을 드릴 수 있습니다.</p>
+                        <strong>가능 요일: (추후 공지)</strong>
+                    </div>
+                </div>
+
+                <!-- 박시원 -->
+                <div class="mentor-row">
+                    <div class="mentor-image">
+                        <img src="images/35.jpg" alt="박시원">
+                    </div>
+                    <div class="mentor-info">
+                        <h2>박시원</h2>
+                        <p>인천포스코고등학교 졸업<br>서울대학교 학부 광역 재학</p>
+                        <p>정시 일반 전형으로 대학에 합격한 경험을 바탕으로, 수능 대비에 대한 깊은 이해와 검증된 전략을 가지고 있습니다.</p>
+                        <strong>가능 요일: (추후 공지)</strong>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 슬라이드 2: 연세대 멘토들 -->
+            <div class="slide">
+                <div class="slide-title">💙 연세대학교 멘토단</div>
+
+                <!-- 정민희 -->
+                <div class="mentor-row">
+                    <div class="mentor-image">
+                        <img src="images/j.png" alt="정민희">
+                    </div>
+                    <div class="mentor-info">
+                        <h2>정민희</h2>
+                        <p>미추홀외국어고등학교 졸업<br>연세대학교 경영학과 재학</p>
+                        <p>미추홀외고 전교 1등 출신으로, 내신이라면 정말 자신이 있습니다! 2024 수능에서는 국어 백분위 100, 영어 1등급의 성적을 받았습니다.</p>
+                        <strong>가능 요일: 화요일, 수요일 18시~21시</strong>
+                    </div>
+                </div>
+
+                <!-- 이상현 -->
+                <div class="mentor-row">
+                    <div class="mentor-image">
+                        <img src="images/ls.png" alt="이상현">
+                    </div>
+                    <div class="mentor-info">
+                        <h2>이상현</h2>
+                        <p>인천포스코고등학교 졸업<br>연세대학교 생화학과 재학</p>
+                        <p>정시 일반 전형으로 대학에 입학하였기에, 수능의 출제 경향성을 파악하고 있습니다. 수능 평균 3등급에서 상위권까지 성적을 올린 경험이 있습니다.</p>
+                        <strong>가능 요일: 일요일 9시~17시</strong>
+                    </div>
+                </div>
+
+                <!-- 안소윤 -->
+                <div class="mentor-row">
+                    <div class="mentor-image">
+                        <img src="images/as.png" alt="안소윤">
+                    </div>
+                    <div class="mentor-info">
+                        <h2>안소윤</h2>
+                        <p>인천포스코고등학교 졸업<br>연세대학교 불어불문학과 재학</p>
+                        <p>고등학교 3년 간 이과 계열 학생으로 공부했고, 인문논술을 통해 문과 계열 학과에 진학했습니다. 현역 수능에서 국어 백분위 99%를 받았습니다.</p>
+                        <strong>가능 요일: (추후 공지)</strong>
+                    </div>
+                </div>
+
+                <!-- 장나영 -->
+                <div class="mentor-row">
+                    <div class="mentor-image">
+                        <img src="images/jang.jpg" alt="장나영">
+                    </div>
+                    <div class="mentor-info">
+                        <h2>장나영</h2>
+                        <p>개원중학교, 숙명여자고등학교 졸업<br>연세대학교 재학</p>
+                        <p>4수라는 긴 수험생활 끝에 연세대학교에 합격했습니다. 국어 3→1등급, 수학 4→1등급으로 성적을 향상시킨 학습전략을 바탕으로 멘토링을 진행합니다.</p>
+                        <strong>가능 요일: (추후 공지)</strong>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 슬라이드 3: 기타 대학 멘토들 -->
+            <div class="slide">
+                <div class="slide-title">🌟 특수대학 & 전문 멘토단</div>
+
+                <!-- 박세영 -->
+                <div class="mentor-row">
+                    <div class="mentor-image">
+                        <img src="images/park.png" alt="박세영">
+                    </div>
+                    <div class="mentor-info">
+                        <h2>박세영</h2>
+                        <p>과학고등학교 조기졸업<br>카이스트 재학</p>
+                        <p>과학고등학교에서 조기졸업한 경험을 바탕으로, 수학 내신 성적 향상 및 문제 풀이 전략에 중점을 둔 멘토링을 진행합니다. 이공계열 진학에 관심이 많은 고등학생들을 대상으로 합니다.</p>
+                        <strong>가능 요일: 화요일, 목요일, 금요일 15시~18시</strong>
+                    </div>
+                </div>
+
+                <!-- 이석민 -->
+                <div class="mentor-row">
+                    <div class="mentor-image">
+                        <img src="images/l.png" alt="이석민">
+                    </div>
+                    <div class="mentor-info">
+                        <h2>이석민</h2>
+                        <p>인천과학고등학교 졸업 (차석 조기졸업)<br>한양대학교 의과대학 재학</p>
+                        <p>과학고등학교에서 치열한 내신 경쟁을 뚫고 차석으로 졸업한 경험을 토대로 상위권~최상위권 학생들을 대상으로 과학, 수학 과목 멘토링을 진행합니다.</p>
+                        <strong>가능 요일: 화요일, 목요일 13시~16시<br>토요일 16시~22시</strong>
+                    </div>
+                </div>
+
+                <!-- 유지성 -->
+                <div class="mentor-row">
+                    <div class="mentor-image">
+                        <img src="images/y.png" alt="유지성">
+                    </div>
+                    <div class="mentor-info">
+                        <h2>유지성</h2>
+                        <p>인천하늘고등학교 졸업<br>성균관대학교 글로벌리더학부 재학</p>
+                        <p>정시로 대학에 입학했던 경험을 토대로 국어와 영어 과목을 중심으로 모의고사 및 수능 준비에 주안점을 두고 멘토링을 진행합니다.</p>
+                        <strong>가능 요일: (추후 공지)</strong>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        let currentSlide = 0;
+        const totalSlides = 3;
+        let autoSlideInterval;
+        let isAutoSliding = true;
+        const SLIDE_DURATION = 8000; // 8초
+
+        function goToSlide(slideIndex, userTriggered = false) {
+            currentSlide = slideIndex;
+            const slidesWrapper = document.getElementById('slidesWrapper');
+            const translateX = -slideIndex * (100 / totalSlides);
+            slidesWrapper.style.transform = `translateX(${translateX}%)`;
+
+            // 네비게이션 버튼 업데이트
+            const navBtns = document.querySelectorAll('.nav-btn');
+            navBtns.forEach((btn, index) => {
+                btn.classList.toggle('active', index === slideIndex);
+            });
+
+            // 인디케이터 업데이트
+            const indicators = document.querySelectorAll('.indicator');
+            indicators.forEach((indicator, index) => {
+                indicator.classList.toggle('active', index === slideIndex);
+            });
+
+            // 사용자가 직접 조작했을 때 자동 슬라이드 일시정지
+            if (userTriggered && isAutoSliding) {
+                pauseAutoSlide();
+                // 3초 후 자동 재시작
+                setTimeout(() => {
+                    if (!isAutoSliding) {
+                        startAutoSlide();
+                    }
+                }, 3000);
+            }
+        }
+
+        function nextSlide() {
+            const nextIndex = (currentSlide + 1) % totalSlides;
+            goToSlide(nextIndex);
+        }
+
+        function startAutoSlide() {
+            if (autoSlideInterval) {
+                clearInterval(autoSlideInterval);
+            }
+            autoSlideInterval = setInterval(nextSlide, SLIDE_DURATION);
+            isAutoSliding = true;
+            updateAutoSlideButton();
+        }
+
+        function pauseAutoSlide() {
+            clearInterval(autoSlideInterval);
+            isAutoSliding = false;
+            updateAutoSlideButton();
+        }
+
+        function toggleAutoSlide() {
+            if (isAutoSliding) {
+                pauseAutoSlide();
+            } else {
+                startAutoSlide();
+            }
+        }
+
+        function resetAutoSlide() {
+            goToSlide(0);
+            startAutoSlide();
+        }
+
+        function updateAutoSlideButton() {
+            const btn = document.getElementById('autoSlideBtn');
+            if (isAutoSliding) {
+                btn.textContent = '⏸️ 자동재생 일시정지';
+                btn.classList.remove('pause');
+            } else {
+                btn.textContent = '▶️ 자동재생 시작';
+                btn.classList.add('pause');
+            }
+        }
+
+        // 페이지 로드 시 자동 슬라이드 시작
+        document.addEventListener('DOMContentLoaded', function() {
+            startAutoSlide();
+        });
+
+        // 키보드 네비게이션
+        document.addEventListener('keydown', function(e) {
+            if (e.key === 'ArrowLeft' && currentSlide > 0) {
+                goToSlide(currentSlide - 1, true);
+            } else if (e.key === 'ArrowRight' && currentSlide < totalSlides - 1) {
+                goToSlide(currentSlide + 1, true);
+            } else if (e.key === ' ') { // 스페이스바로 일시정지/재생
+                e.preventDefault();
+                toggleAutoSlide();
+            }
+        });
+
+        // 터치 스와이프 지원
+        let startX = 0;
+        let endX = 0;
+
+        document.addEventListener('touchstart', function(e) {
+            startX = e.touches[0].clientX;
+        });
+
+        document.addEventListener('touchend', function(e) {
+            endX = e.changedTouches[0].clientX;
+            const diffX = startX - endX;
+
+            if (Math.abs(diffX) > 50) { // 최소 50px 스와이프
+                if (diffX > 0 && currentSlide < totalSlides - 1) {
+                    goToSlide(currentSlide + 1, true);
+                } else if (diffX < 0 && currentSlide > 0) {
+                    goToSlide(currentSlide - 1, true);
+                }
+            }
+        });
+
+        // 버튼 클릭 시 사용자 조작으로 처리
+        document.querySelectorAll('.nav-btn').forEach((btn, index) => {
+            btn.addEventListener('click', () => goToSlide(index, true));
+        });
+
+        document.querySelectorAll('.indicator').forEach((indicator, index) => {
+            indicator.addEventListener('click', () => goToSlide(index, true));
+        });
+
+        // 페이지가 보이지 않을 때 자동 슬라이드 일시정지
+        document.addEventListener('visibilitychange', function() {
+            if (document.hidden) {
+                pauseAutoSlide();
+            } else if (!isAutoSliding) {
+                // 페이지가 다시 보일 때는 사용자가 명시적으로 일시정지하지 않았다면 재시작
+                startAutoSlide();
+            }
+        });
+    </script>
+</body>
+</html>
